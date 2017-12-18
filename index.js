@@ -23,7 +23,6 @@ const rest = require("restler-bluebird");
 							storedArticle.provider_uid === article.UniqueName
 					);
 					if (!exists) {
-						console.log("Found unique article", article.UniqueName);
 						await page.click(
 							`[data-uniquename='${article.UniqueName}']`
 						);
@@ -42,11 +41,7 @@ const rest = require("restler-bluebird");
 				var jsonResponse = await response.json();
 				// console.log(jsonResponse);
 				var article = jsonResponse.Data;
-				console.log(
-					"Saving article",
-					jsonResponse.ContextData,
-					article.Title
-				);
+				console.log(jsonResponse.ContextData, article.Title);
 				var body = article.Description;
 				var data = {
 					headline: article.Title,
@@ -61,7 +56,7 @@ const rest = require("restler-bluebird");
 					keywords: article.Keywords.split("|")
 				};
 				// console.log({ data });
-				await rest.post(process.env.API_URL + "article", {
+				await rest.post(process.env.API_ENDPOINT, {
 					data,
 					username: process.env.API_USERNAME,
 					password: process.env.API_PASSWORD
@@ -72,7 +67,7 @@ const rest = require("restler-bluebird");
 	});
 	// Load the site
 	await page.goto(process.env.AFP_URL);
-	var storedArticleData = await rest.get(process.env.API_URL + "article", {
+	var storedArticleData = await rest.get(process.env.API_ENDPOINT, {
 		fields: "provider_uid",
 		username: process.env.API_USERNAME,
 		password: process.env.API_PASSWORD
