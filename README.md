@@ -20,3 +20,7 @@ API_USERNAME=<your RESTful API username>
 API_PASSWORD=<your RESTful API password>
 API_ENDPOINT=<url to the API's endpoint to store the articles>
 ```
+
+## Running
+
+`npm start`
