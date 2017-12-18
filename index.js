@@ -7,32 +7,6 @@ const rest = require("restler-bluebird");
 	const page = await browser.newPage();
 	console.log("Loading url", process.env.AFP_URL);
 
-	// Load the site
-	await page.goto(process.env.AFP_URL);
-
-	console.log("Fetching existing articles");
-	var storedArticleData = await rest.get(process.env.API_URL + "article", {
-		fields: "provider_uid",
-		username: process.env.API_USERNAME,
-		password: process.env.API_PASSWORD
-	});
-	var storedArticles = storedArticleData.data;
-
-	// Get rid of blocking page
-	await page.waitForFunction(
-		"document.getElementById('shortcutParent').style.display == 'block'"
-	);
-	await page.waitForFunction(
-		"document.getElementById('shortcutParent').style.display = 'none'"
-	);
-
-	// Login
-	await page.waitForSelector("#username");
-	await page.type("#username", process.env.AFP_USERNAME);
-	await page.type("#Password", process.env.AFP_PASSWORD);
-	await page.click("#btnConnexion > input");
-
-	await page.waitForSelector("#login");
 	page.on("response", response => {
 		(async () => {
 			if (
@@ -96,6 +70,31 @@ const rest = require("restler-bluebird");
 			}
 		})();
 	});
+	// Load the site
+	await page.goto(process.env.AFP_URL);
+	var storedArticleData = await rest.get(process.env.API_URL + "article", {
+		fields: "provider_uid",
+		username: process.env.API_USERNAME,
+		password: process.env.API_PASSWORD
+	});
+	var storedArticles = storedArticleData.data;
+
+	// Get rid of blocking page
+	await page.waitForFunction(
+		"document.getElementById('shortcutParent').style.display == 'block'"
+	);
+	await page.waitForFunction(
+		"document.getElementById('shortcutParent').style.display = 'none'"
+	);
+
+	// Login
+	await page.waitForSelector("#username");
+	await page.type("#username", process.env.AFP_USERNAME);
+	await page.type("#Password", process.env.AFP_PASSWORD);
+	await page.click("#btnConnexion > input");
+
+	await page.waitForSelector("#login");
+
 	// Accept T&Cs
 	await page.waitForSelector("#cbAcceptCGU");
 	await page.click("#cbAcceptCGU");
