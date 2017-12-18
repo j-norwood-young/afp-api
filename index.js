@@ -3,7 +3,7 @@ require("dotenv").config();
 const rest = require("restler-bluebird");
 
 (async () => {
-	const browser = await puppeteer.launch({ headless: true, timeout: 60000 });
+	const browser = await puppeteer.launch({ headless: false, timeout: 60000 });
 	const page = await browser.newPage();
 	console.log("Loading url", process.env.AFP_URL);
 
@@ -23,11 +23,44 @@ const rest = require("restler-bluebird");
 							storedArticle.provider_uid === article.UniqueName
 					);
 					if (!exists) {
-						await page.click(
-							`[data-uniquename='${article.UniqueName}']`
-						);
-						await page.waitFor(2000);
-						await page.click("#docDetailBack");
+						try {
+							// console.log(
+							// 	`Waiting for [data-uniquename='${
+							// 		article.UniqueName
+							// 	}']`
+							// );
+							await page.waitForSelector(
+								`[data-uniquename='${article.UniqueName}']`,
+								{ visible: true, timeout: 5000 }
+							);
+						} catch (e) {
+							console.trace(e);
+						}
+						try {
+							// console.log(
+							// 	`Clicking [data-uniquename='${
+							// 		article.UniqueName
+							// 	}']`
+							// );
+							await page.click(
+								`[data-uniquename='${article.UniqueName}']`
+							);
+						} catch (e) {
+							console.trace(e);
+						}
+						try {
+							// console.log(`Waiting for #docDetailBack`);
+							await page.waitFor(1000);
+						} catch (e) {
+							console.trace(e);
+						}
+						try {
+							// console.log(`Clicking #docDetailBack`);
+							await page.click("#docDetailBack");
+						} catch (e) {
+							console.trace(e);
+						}
+						// console.log("Done with article");
 						await page.waitFor(500);
 					}
 				}
