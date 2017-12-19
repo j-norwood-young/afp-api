@@ -1,6 +1,7 @@
 const puppeteer = require("puppeteer");
 require("dotenv").config();
 const rest = require("restler-bluebird");
+const moment = require("moment");
 
 (async () => {
 	const browser = await puppeteer.launch({ headless: false, timeout: 60000 });
@@ -15,6 +16,7 @@ const rest = require("restler-bluebird");
 			) {
 				var jsonResponse = await response.json();
 				var articles = jsonResponse.Data.Results;
+				globalArticles = articles;
 				// console.log(articles);
 				await page.waitFor(5000);
 				for (let article of articles) {
@@ -74,8 +76,18 @@ const rest = require("restler-bluebird");
 				var jsonResponse = await response.json();
 				// console.log(jsonResponse);
 				var article = jsonResponse.Data;
+				var globalArticle = globalArticles.find(
+					ga => ga.UniqueName === jsonResponse.ContextData
+				);
 				console.log(jsonResponse.ContextData, article.Title);
 				var body = article.Description;
+				console.log({ globalArticle });
+				console.log(globalArticle.Date + " " + globalArticle.Time);
+				var date = moment(
+					globalArticle.Date + " " + globalArticle.Time,
+					"DD/MM/YYYY HH:mm:ss"
+				).format("YYYY-MM-DDTHH:mm:ss");
+				console.log({ date });
 				var data = {
 					headline: article.Title,
 					blurb: "",
@@ -83,10 +95,10 @@ const rest = require("restler-bluebird");
 					body,
 					byline: article.ByLine,
 					provider: "AFP",
-					date: new Date(),
 					city: "",
 					country: "",
-					keywords: article.Keywords.split("|")
+					keywords: article.Keywords.split("|"),
+					date
 				};
 				// console.log({ data });
 				await rest.post(process.env.API_ENDPOINT, {
