@@ -4,7 +4,7 @@ const rest = require("restler-bluebird");
 const moment = require("moment");
 
 (async () => {
-	const browser = await puppeteer.launch({ headless: false, timeout: 60000 });
+	const browser = await puppeteer.launch({ headless: true, timeout: 60000 });
 	const page = await browser.newPage();
 	console.log("Loading url", process.env.AFP_URL);
 
