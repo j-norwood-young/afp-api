@@ -162,5 +162,5 @@ const moment = require("moment");
 	// }, resultsSelector);
 	// console.log(links);
 	// console.log("All done");
-	// await browser.close();
+	await browser.close();
 })();
