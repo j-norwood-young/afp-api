@@ -89,6 +89,7 @@ const moment = require("moment");
 					globalArticle.Date + " " + globalArticle.Time,
 					"DD/MM/YYYY HH:mm:ss"
 				).format("YYYY-MM-DDTHH:mm:ss");
+				date_updated = moment().format("YYYY-MM-DDTHH:mm:ss");
 				// console.log({ date });
 				var data = {
 					headline: article.Title,
@@ -100,7 +101,8 @@ const moment = require("moment");
 					city: "",
 					country: "",
 					keywords: article.Keywords.split("|"),
-					date
+					date,
+					date_updated
 				};
 				let exists = storedArticles.find(
 					storedArticle => storedArticle.provider_uid === data.provider_uid
