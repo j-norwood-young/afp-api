@@ -1,7 +1,8 @@
 const puppeteer = require("puppeteer");
 require("dotenv").config();
 const rest = require("restler-bluebird");
-const moment = require("moment");
+const moment = require("moment-timezone");
+var tzParisFormat = "CEST";
 
 (async () => {
 	const browser = await puppeteer.launch({ headless: true, timeout: 60000 });
@@ -85,10 +86,10 @@ const moment = require("moment");
 				var body = article.Description;
 				// console.log({ globalArticle });
 				// console.log(globalArticle.Date + " " + globalArticle.Time);
-				var date = moment(
-					globalArticle.Date + " " + globalArticle.Time,
-					"DD/MM/YYYY HH:mm:ss"
-				).format("YYYY-MM-DDTHH:mm:ss");
+				var date = moment(`${ globalArticle.Date } ${ globalArticle.Time } ${ tzParisFormat }`,
+					"DD/MM/YYYY HH:mm:ss z"
+				).format("YYYY-MM-DDTHH:mm:ss Z");
+				console.log(`${ globalArticle.Date } ${ globalArticle.Time } ${ tzParisFormat }`, date);
 				date_updated = moment().format("YYYY-MM-DDTHH:mm:ss");
 				// console.log({ date });
 				var data = {

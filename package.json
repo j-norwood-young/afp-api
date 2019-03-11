@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "dotenv": "^4.0.0",
-    "moment": "^2.20.1",
+    "dotenv": "^6.0.0",
+    "moment": "^2.22.2",
+    "moment-timezone": "^0.5.21",
     "puppeteer": "^0.13.0",
     "restler-bluebird": "^0.2.2"
   },
